@@ -1,0 +1,263 @@
+type: collection.insomnia.rest/5.0
+name: ACME
+meta:
+  id: wrk_b606409080614982a5f956f7301444c1
+  created: 1759419127919
+  modified: 1760675970692
+  description: ""
+collection:
+  - name: local
+    meta:
+      id: fld_43e682a8eaad45a0a758ec34a0e18fb8
+      created: 1760671361739
+      modified: 1760671361739
+      sortKey: -1760671361739
+      description: ""
+    children:
+      - url: http://localhost:8090/api/locales/46
+        name: New Request
+        meta:
+          id: req_ee485b020e784f0188c0074eefff338c
+          created: 1760671364693
+          modified: 1760672640796
+          isPrivate: false
+          description: ""
+          sortKey: -1760671364693
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8090/api/locales/46
+        name: actualizar
+        meta:
+          id: req_e51d0cec52d24acebb0a14b699f9e76d
+          created: 1760671367604
+          modified: 1760672619867
+          isPrivate: false
+          description: ""
+          sortKey: -1760671367604
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "local": "Planta Norte Actualizada",
+              "cliente": { "idCliente": 1 },
+              "territorio": { "idTerritorio": 3 }
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8090/api/locales
+        name: registar
+        meta:
+          id: req_271b74782ca64fa38c3782cb72848604
+          created: 1760671369058
+          modified: 1760672508140
+          isPrivate: false
+          description: ""
+          sortKey: -1760671369058
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "local": "Planta Norte",
+              "cliente": {
+                "idCliente": 1
+              },
+              "territorio": {
+                "idTerritorio": 3
+              }
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8090/api/locales
+        name: listar
+        meta:
+          id: req_557f8d3b47894a92af7ab3765f0cb68b
+          created: 1760671370251
+          modified: 1760672319189
+          isPrivate: false
+          description: ""
+          sortKey: -1760671370251
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: productos
+    meta:
+      id: fld_6394dbed182144a4ab29c31c25dd0bc9
+      created: 1760672657661
+      modified: 1760672674614
+      sortKey: -1760672657661
+      description: ""
+    children:
+      - url: http://localhost:8090/api/productos
+        name: registrar
+        meta:
+          id: req_c6545d0de4544739811de5c48b4d778b
+          created: 1759419127928
+          modified: 1760672806848
+          isPrivate: false
+          description: ""
+          sortKey: -1760672662934
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "producto": "Laptop ASUS TUF",
+              "marca": "ASUS",
+              "categoria": "Tecnología",
+              "comercializador": "ASUS Perú"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_8ad778ff70824bea9feb121b4f65d1ee
+        authentication:
+          type: bearer
+          token: ""
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8090/api/productos
+        name: listar
+        meta:
+          id: req_e3e7c8a6de0047a39484c64da28b0bb9
+          created: 1759440004712
+          modified: 1760672801295
+          isPrivate: false
+          description: ""
+          sortKey: -1760672663059
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        authentication:
+          type: bearer
+          token: ""
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8090/api/productos/24
+        name: actualizar
+        meta:
+          id: req_b00b446891224b46905c06fa711dd9d0
+          created: 1759461032470
+          modified: 1760672833971
+          isPrivate: false
+          description: ""
+          sortKey: -1760672662809
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "producto": "Laptop ASUS ROG Actualizado",
+              "marca": "ASUS",
+              "categoria": "Gaming",
+              "comercializador": "ASUS Store Perú"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_e6714141e4c84a7993b85a66e5875fe0
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_b8c8be8f961e4124af64824542821165
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqdWFuYSIsImlhdCI6MTc1OTU5NzY2MywiZXhwIjoxNzU5NjMzNjYzfQ.ftMLsAP73hxo6pKqGm3qiQQ9SkEpWs9tIDV8g5MKMrZOCuqiQHWvl8c6u6FK0_2KdgBEBd-DORS-njtPhZaFiQ
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8090/api/productos/24
+        name: eliminar
+        meta:
+          id: req_c8b1e940a20649d09436246ffbc617f1
+          created: 1760669575170
+          modified: 1760672805088
+          isPrivate: false
+          description: ""
+          sortKey: -1760672662659
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_a8beec1c436ed3fbe41000cbc775f3de2b277c36
+    created: 1759419127925
+    modified: 1759419127925
+environments:
+  name: Base Environment
+  meta:
+    id: env_a8beec1c436ed3fbe41000cbc775f3de2b277c36
+    created: 1759419127924
+    modified: 1759419127924
+    isPrivate: false
