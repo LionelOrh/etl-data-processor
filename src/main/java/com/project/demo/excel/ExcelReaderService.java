@@ -1,9 +1,13 @@
 package com.project.demo.excel;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.excel.EasyExcel;
@@ -31,56 +35,81 @@ import com.project.demo.repository.VentaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+
 @Service
 @RequiredArgsConstructor
 public class ExcelReaderService {
 
-	private final VendedorRepository vendedorRepository;
-	private final ClienteRepository clienteRepository;
-	private final LocalRepository localRepository;
-	private final ProductoRepository productoRepository;
-	private final VentaRepository ventaRepository;
-	private final TerritorioRepository territorioRepository;
-	private final VendedorTerritorioRepository vendedorTerritorioRepository;
+    private final VendedorRepository vendedorRepository;
+    private final ClienteRepository clienteRepository;
+    private final LocalRepository localRepository;
+    private final ProductoRepository productoRepository;
+    private final VentaRepository ventaRepository;
+    private final TerritorioRepository territorioRepository;
+    private final VendedorTerritorioRepository vendedorTerritorioRepository;
 
-	@Transactional
-	public void readExcelFile(String filePath) {
+    
+    @Value("${app.excel.path}")
+    private String excelBasePath;
 
-		// Hoja 1: Vendedores
-		EasyExcel
-				.read(filePath, VendedorDTO.class,
-						new VendedorListener(vendedorRepository, territorioRepository, vendedorTerritorioRepository))
-				.sheet("Vendedores").doRead();
+    @Transactional
+    public void readExcelFile(String fileName) {
+        try {
+            
+            Path basePath = Paths.get(excelBasePath).toAbsolutePath().normalize();
+            Path targetPath = basePath.resolve(fileName).normalize();
 
-		// Hoja 2: Clientes
-		EasyExcel.read(filePath, ClienteDTO.class, new ClienteListener(clienteRepository)).sheet("Clientes").doRead();
+            
+            if (!targetPath.startsWith(basePath)) {
+                throw new SecurityException("Acceso no autorizado fuera del directorio permitido");
+            }
 
-		Map<String, Cliente> clientesMap = clienteRepository.findAll().stream()
-				.collect(Collectors.toMap(c -> c.getCliente().trim().toLowerCase(), c -> c));
+            File excelFile = targetPath.toFile();
+            if (!excelFile.exists()) {
+                throw new IllegalArgumentException("El archivo no existe: " + excelFile.getAbsolutePath());
+            }
 
-		Map<String, Territorio> territoriosMap = territorioRepository.findAll().stream()
-				.collect(Collectors.toMap(t -> t.getTerritorio().trim().toLowerCase(), t -> t));
+            String filePath = excelFile.getAbsolutePath();
 
-		Map<String, Local> localMap = new HashMap<>();
+            // 📊 Hoja 1: Vendedores
+            EasyExcel.read(filePath, VendedorDTO.class,
+                    new VendedorListener(vendedorRepository, territorioRepository, vendedorTerritorioRepository))
+                    .sheet("Vendedores").doRead();
 
-		// Hoja 3: Locales
-		EasyExcel
-				.read(filePath, LocalDTO.class,
-						new LocalListener(localRepository, clientesMap, localMap, territoriosMap))
-				.sheet("Locales").doRead();
+            // 📊 Hoja 2: Clientes
+            EasyExcel.read(filePath, ClienteDTO.class, new ClienteListener(clienteRepository))
+                    .sheet("Clientes").doRead();
 
-		// Hoja 4: Productos
-		EasyExcel.read(filePath, ProductoDTO.class, new ProductoListener(productoRepository)).sheet("Producto")
-				.doRead();
+            Map<String, Cliente> clientesMap = clienteRepository.findAll().stream()
+                    .collect(Collectors.toMap(c -> c.getCliente().trim().toLowerCase(), c -> c));
 
-		// Hoja 5: Ventas
+            Map<String, Territorio> territoriosMap = territorioRepository.findAll().stream()
+                    .collect(Collectors.toMap(t -> t.getTerritorio().trim().toLowerCase(), t -> t));
 
-		Map<String, Local> localesMap = localRepository.findAll().stream().collect(
-				Collectors.toMap(l -> (l.getLocal() + "-" + l.getCliente().getCliente()).trim().toLowerCase(), l -> l));
+            Map<String, Local> localMap = new HashMap<>();
 
-		EasyExcel
-				.read(filePath, VentaDTO.class,
-						new VentaListener(ventaRepository, productoRepository, localesMap, clientesMap))
-				.sheet("Ventas").doRead();
-	}
+            // 📊 Hoja 3: Locales
+            EasyExcel.read(filePath, LocalDTO.class,
+                    new LocalListener(localRepository, clientesMap, localMap, territoriosMap))
+                    .sheet("Locales").doRead();
+
+            // 📊 Hoja 4: Productos
+            EasyExcel.read(filePath, ProductoDTO.class, new ProductoListener(productoRepository))
+                    .sheet("Producto").doRead();
+
+            // 📊 Hoja 5: Ventas
+            Map<String, Local> localesMap = localRepository.findAll().stream()
+                    .collect(Collectors.toMap(l -> (l.getLocal() + "-" + l.getCliente().getCliente())
+                            .trim().toLowerCase(), l -> l));
+
+            EasyExcel.read(filePath, VentaDTO.class,
+                    new VentaListener(ventaRepository, productoRepository, localesMap, clientesMap))
+                    .sheet("Ventas").doRead();
+
+            System.out.println("✅ Archivo cargado correctamente: " + filePath);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error al procesar el archivo Excel: " + e.getMessage(), e);
+        }
+    }
 }

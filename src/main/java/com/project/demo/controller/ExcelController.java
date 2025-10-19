@@ -16,19 +16,16 @@ import lombok.RequiredArgsConstructor;
 public class ExcelController {
 	private final ExcelReaderService excelReaderService;
 
-    /**
-     * Carga el Excel desde una ruta específica
-     * @param ruta Ruta del archivo Excel
-     * @return Respuesta con resumen
-     */
-    @PostMapping("/cargar")
-    public ResponseEntity<String> cargarExcel(@RequestParam("ruta") String ruta) {
-        try {
-            excelReaderService.readExcelFile(ruta);
-            return ResponseEntity.ok("✅ Excel cargado correctamente desde: " + ruta);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("❌ Error al cargar el Excel: " + e.getMessage());
-        }
-    }
+	@PostMapping("/cargar")
+	public ResponseEntity<String> cargarExcel(@RequestParam("nombreArchivo") String nombreArchivo) {
+	    try {
+	        excelReaderService.readExcelFile(nombreArchivo);
+	        return ResponseEntity.ok("✅ Excel cargado correctamente: " + nombreArchivo);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(500)
+	                .body("❌ Error al cargar el Excel: " + e.getMessage());
+	    }
+	}
+
 }	
